@@ -41,9 +41,9 @@
             
   <div class="section" id="module-kNN">
 <span id="k-nn-predictor"></span><h1>k-NN Predictor<a class="headerlink" href="#module-kNN" title="Permalink to this headline">¶</a></h1>
-<p>Pattern recognition and prediction on CSV data using the ‘k-Nearest-Neighbours algorithm.</p>
-<p>The ‘k-Nearest-Neighbours’ (k-NN) algorithm is a simple but in many cases sufficient algorithm for pattern
-recognition. It can be used both for regression and classificatoin. This module serves as a framework for applying
+<p>Pattern recognition and prediction on CSV data using the ‘k-nearest neighbours algorithm.</p>
+<p>The ‘k-nearest neighbours’ (k-NN) algorithm is a simple but in many cases sufficient algorithm for pattern
+recognition. It can be used both for regression and classification. This module serves as a framework for applying
 k-NN prediction on a data set. The module was designed with compatibility with Microsoft Excel in mind, and natively
 supports the default CSV-format exported by Excel 2013.</p>
 <p>The module facilitates exporting and importing .csv files, but the data can also be given and returned as text strings.
@@ -52,21 +52,21 @@ It is therefore possible to use the module both as a standalone API, as well as 
 <dt id="kNN.Predictor">
 <em class="property">class </em><code class="descclassname">kNN.</code><code class="descname">Predictor</code><span class="sig-paren">(</span><em>k=1</em>, <em>norm='euclidean'</em>, <em>rounding=None</em>, <em>calc_style='mean'</em>, <em>data_filename='datasheet.csv'</em>, <em>prediction_filename='predictionsheet.csv'</em><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Predictor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Toolbox for k-NN calculations on CSV data, that is also capable of importing and exporting data as CSV files.</p>
-<p>This class contains an implementation of the ‘k-Nearest-Neighbours’ algorithm for pattern recognition. The kNN
+<p>This class contains an implementation of the ‘k-nearest neighbours’ algorithm for pattern recognition. The kNN
 algorithm allows for simple classification and prediction. The following terms are used in this documentation:</p>
 <div class="line-block">
 <div class="line"><strong>feature</strong> - A property of an object, for example how much the object enjoys pizza.</div>
 <div class="line"><strong>feature name</strong> - A string assigned to a feature. The above mentioned feature could be called ‘Pizza’.</div>
 <div class="line"><strong>feature value</strong> - The value of the feature. For example, an object that enjoys pizza might have a ‘Pizza’ value
-of 1, whereas an object that dislikes pizza might ha a ‘Pizza’ value of -1.</div>
+of 1, whereas an object that dislikes pizza might have a ‘Pizza’ value of -1.</div>
 <div class="line"><strong>blank feature</strong> - A feature that has no assigned value.</div>
-<div class="line"><strong>feature vector</strong> - A representation of an object consisting of a set of _features belonging to the object. Each
+<div class="line"><strong>feature vector</strong> - A representation of an object consisting of a set of features belonging to the object. Each
 vector also has a name, for example a feature vector could be named ‘Jim’ and have the feature ‘Pizza’ with value 1.</div>
-<div class="line"><strong>space</strong> - A multidimensional vector _space containing feature vectors. Each feature vector in the _space is assigned
-an integer identity number, called idn. The idn is used to keep track of the feature vectors in the _space.</div>
+<div class="line"><strong>space</strong> - A multidimensional vector space containing feature vectors. Each feature vector in the space is assigned
+an integer identity number, called idn. The idn is used to keep track of the feature vectors in the space.</div>
 </div>
-<p>The purpose of the Predictor is to predict the values of the blank _features based on the _features of the other
-vectors in the _space. The class contains sufficient methods to construct a _space from scratch. It is, however,
+<p>The purpose of the Predictor is to predict the values of the blank features based on the features of the other
+vectors in the space. The class contains sufficient methods to construct a space from scratch. It is, however,
 also capable of importing data stored in a comma-separated-value format (CSV), either as a .csv file or as a string.
 The csv data should be formatted as seen in the below example, where the empty string indicates a blank feature:</p>
 <div class="line-block">
