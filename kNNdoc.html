@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>kNNdoc &#8212; GrudatProjekt 1.0.0 documentation</title>
+    <title>k-NN Predictor &#8212; GrudatProjekt 1.0.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -40,73 +40,146 @@
           <div class="body" role="main">
             
   <div class="section" id="module-kNN">
-<span id="knndoc"></span><h1>kNNdoc<a class="headerlink" href="#module-kNN" title="Permalink to this headline">¶</a></h1>
+<span id="k-nn-predictor"></span><h1>k-NN Predictor<a class="headerlink" href="#module-kNN" title="Permalink to this headline">¶</a></h1>
+<p>Pattern recognition and prediction on CSV data using the ‘k-Nearest-Neighbours algorithm.</p>
+<p>The ‘k-Nearest-Neighbours’ (k-NN) algorithm is a simple but in many cases sufficient algorithm for pattern
+recognition. It can be used both for regression and classificatoin. This module serves as a framework for applying
+k-NN prediction on a data set. The module was designed with compatibility with Microsoft Excel in mind, and natively
+supports the default CSV-format exported by Excel 2013.</p>
+<p>The module facilitates exporting and importing .csv files, but the data can also be given and returned as text strings.
+It is therefore possible to use the module both as a standalone API, as well as integrated with Excel.</p>
 <dl class="class">
-<dt id="kNN.FeatureVector">
-<em class="property">class </em><code class="descclassname">kNN.</code><code class="descname">FeatureVector</code><span class="sig-paren">(</span><em>idn=None</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#kNN.FeatureVector" title="Permalink to this definition">¶</a></dt>
-<dd><p>Represents a vector containing the features of an object.</p>
-<p>The vector represents a concrete or abstract object with features that can be represented as numerical values.
-The vector should be interpreted as living in a multidimensional vector space where each dimension represents
-a distinct feature.</p>
+<dt id="kNN.Predictor">
+<em class="property">class </em><code class="descclassname">kNN.</code><code class="descname">Predictor</code><span class="sig-paren">(</span><em>k=1</em>, <em>norm='euclidean'</em>, <em>rounding=None</em>, <em>calc_style='mean'</em>, <em>data_filename='datasheet.csv'</em>, <em>prediction_filename='predictionsheet.csv'</em><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Predictor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toolbox for k-NN calculations on CSV data, that is also capable of importing and exporting data as CSV files.</p>
+<p>This class contains an implementation of the ‘k-Nearest-Neighbours’ algorithm for pattern recognition. The kNN
+algorithm allows for simple classification and prediction. The following terms are used in this documentation:</p>
+<div class="line-block">
+<div class="line"><strong>feature</strong> - A property of an object, for example how much the object enjoys pizza.</div>
+<div class="line"><strong>feature name</strong> - A string assigned to a feature. The above mentioned feature could be called ‘Pizza’.</div>
+<div class="line"><strong>feature value</strong> - The value of the feature. For example, an object that enjoys pizza might have a ‘Pizza’ value
+of 1, whereas an object that dislikes pizza might ha a ‘Pizza’ value of -1.</div>
+<div class="line"><strong>blank feature</strong> - A feature that has no assigned value.</div>
+<div class="line"><strong>feature vector</strong> - A representation of an object consisting of a set of _features belonging to the object. Each
+vector also has a name, for example a feature vector could be named ‘Jim’ and have the feature ‘Pizza’ with value 1.</div>
+<div class="line"><strong>space</strong> - A multidimensional vector _space containing feature vectors. Each feature vector in the _space is assigned
+an integer identity number, called idn. The idn is used to keep track of the feature vectors in the _space.</div>
+</div>
+<p>The purpose of the Predictor is to predict the values of the blank _features based on the _features of the other
+vectors in the _space. The class contains sufficient methods to construct a _space from scratch. It is, however,
+also capable of importing data stored in a comma-separated-value format (CSV), either as a .csv file or as a string.
+The csv data should be formatted as seen in the below example, where the empty string indicates a blank feature:</p>
+<div class="line-block">
+<div class="line">ID Number,Name,Pizza,Meatballs</div>
+<div class="line">0,Jim,1,-1</div>
+<div class="line">5,Aubrey,1,1</div>
+<div class="line">2,Stephanie,,1</div>
+<div class="line">3,Harrison,-1,</div>
+</div>
+<p>The predicted data can either be returned as a list of tuples or a csv formatted string, or be exported as a .csv
+file. To carry out a prediction, a Predictor object must first be created and populated with data. The result of the
+predictions depend on certain parameters in the Predictor object. They are as follows:</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
-</tr>
-</tbody>
-</table>
-<p>likes = 1<br/>
-dislikes = -1<br/>
-vector = Vector(1, ‘Winnie’)<br/>
-vector[‘Honey’, likes]<br/>
-vector[‘Pork’, dislikes]</p>
-<dl class="method">
-<dt id="kNN.FeatureVector.distance">
-<code class="descname">distance</code><span class="sig-paren">(</span><em>vector</em>, <em>norm</em><span class="sig-paren">)</span><a class="headerlink" href="#kNN.FeatureVector.distance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Take a feature vector and calculate the distance to the self vector in given norm.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>vector</strong> – second feature vector.</li>
-<li><strong>norm</strong> – norm to be used.</li>
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>k</strong> – The number of nearest neighbours to consider in the k-NN algorithm.</li>
+<li><strong>norm</strong> – Determines the norm to be use when calculating distances. Currently accepted norms are:
+‘euclidean’ - Regular euclidean norm.</li>
+<li><strong>calc_style</strong> – Determines the calculation method to use when determining predicted values. The styles are:
+‘mean’ - Used in regression type prediction. Calculates predictions as the mean feature value of the k nearest
+neighbours.
+‘vote’ - Use in classification type prediction. Calculates predictions as the most common feature value
+of the k-nearest neighbours. If vote is tied, the smallest of the tied values is chosen.</li>
+<li><strong>rounding</strong> – Determines the rounding method to be used when rounding predicted values. Does not affect
+results if calc_style is set to ‘vote’. The available rounding methods are:
+‘integer’ - Rounds to the nearest integer.
+‘binary’ - Rounds to 0 or 1, whichever is nearest.
+‘binary polar - Rounds to -1 or 1, whichever is nearest.
+None - No rounding is performed on the predicted value.</li>
+<li><strong>data_filename</strong> – Name of .csv file containing data to be imported.</li>
+<li><strong>prediction_filename</strong> – Name of .csv file where prediction data is to be exported to.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">distance between vectors.</p>
-</td>
-</tr>
 </tbody>
 </table>
-</dd></dl>
-
+<p>The module is therefore able to handle both integers and real numbers as feature values (in fact, any numberlike
+type will work), and can be used for both classification and regression style predictions. Currently only
+euclidean norm is available.</p>
 <dl class="method">
-<dt id="kNN.FeatureVector.intersection">
-<code class="descname">intersection</code><span class="sig-paren">(</span><em>vector</em><span class="sig-paren">)</span><a class="headerlink" href="#kNN.FeatureVector.intersection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Take a vector and return the intersection of the sets of features of both vectors.”</p>
+<dt id="kNN.Predictor.import_feature_space">
+<code class="descname">import_feature_space</code><span class="sig-paren">(</span><em>filename=None</em><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Predictor.import_feature_space" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read CSV file and populate feature space with feature vectors.</p>
+<div class="line-block">
+<div class="line">Text in file must have the following format:</div>
+<div class="line">ID Number,Name,Feature1,Feature2, …</div>
+<div class="line">id0,name0,value01,value02, …</div>
+<div class="line">id1,name1,value11,value12, …</div>
+<div class="line-block">
+<div class="line">.   .       .       .     …</div>
+</div>
+</div>
+<p>Note: Lines ‘|’ in source code are only for reST and should not be included in CSV. This is the format natively
+exported by Microsoft Excel 2013.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>vector</strong> – second feature vector.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list containing shared features.</td>
+<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> – Name of .csv file containing data. Defaults to instance variable data_filename if omitted.</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="kNN.Predictor.set_feature_space">
+<code class="descname">set_feature_space</code><span class="sig-paren">(</span><em>csv_string</em><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Predictor.set_feature_space" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take string containing CSV data and populate feature space with feature vectors.</p>
+<div class="line-block">
+<div class="line">String must have the following format:</div>
+<div class="line">ID Number,Name,Feature1,Feature2,…</div>
+<div class="line">id0,name0,value01,value02,…</div>
+<div class="line">id1,name1,value11,value12,…</div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>csv_string</strong> – String containing CSV data.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="class">
-<dt id="kNN.Recommender">
-<em class="property">class </em><code class="descclassname">kNN.</code><code class="descname">Recommender</code><span class="sig-paren">(</span><em>k=1</em>, <em>norm=0</em>, <em>rounding=3</em>, <em>csv_filename='datasheet.csv'</em><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Recommender" title="Permalink to this definition">¶</a></dt>
-<dd><p>Toolbox for k-NN calculations, and is also capable of loading, storing, and saving data.</p>
 <dl class="method">
-<dt id="kNN.Recommender.add_vector">
-<code class="descname">add_vector</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Recommender.add_vector" title="Permalink to this definition">¶</a></dt>
+<dt id="kNN.Predictor.clear_feature_space">
+<code class="descname">clear_feature_space</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Predictor.clear_feature_space" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear feature space and remove all feature vectors.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kNN.Predictor.export_feature_space">
+<code class="descname">export_feature_space</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Predictor.export_feature_space" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save current instance _space as CSV file using Excel 2013 formatting.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="kNN.Predictor.add_vector">
+<code class="descname">add_vector</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Predictor.add_vector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Take a name and add as an empty vector to feature space, then return assigned identity number.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -121,36 +194,40 @@ vector[‘Pork’, dislikes]</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="kNN.Recommender.blank_features">
-<code class="descname">blank_features</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Recommender.blank_features" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a list of tuples listing all existing features without assigned value and corresponding idn.</p>
+<dt id="kNN.Predictor.remove_vector">
+<code class="descname">remove_vector</code><span class="sig-paren">(</span><em>idn</em><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Predictor.remove_vector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take idn and remove feature vector from feature space.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list of tuples with format (idn, blank_feature_name).</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>idn</strong> – Identity number of vector to be removed.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="method">
-<dt id="kNN.Recommender.export_feature_space">
-<code class="descname">export_feature_space</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Recommender.export_feature_space" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save current instance space as CSV file using Excel 2013 formatting.</p>
+<dt id="kNN.Predictor.vector_string">
+<code class="descname">vector_string</code><span class="sig-paren">(</span><em>idn</em><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Predictor.vector_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take identity number and return a string representation of corresponding vector.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>idn</strong> – identity number of queried vector.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">string representation of vector, containing name, idn, features, and feature values.</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="method">
-<dt id="kNN.Recommender.feature">
-<code class="descname">feature</code><span class="sig-paren">(</span><em>idn</em>, <em>feature</em><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Recommender.feature" title="Permalink to this definition">¶</a></dt>
+<dt id="kNN.Predictor.feature">
+<code class="descname">feature</code><span class="sig-paren">(</span><em>idn</em>, <em>feature</em><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Predictor.feature" title="Permalink to this definition">¶</a></dt>
 <dd><p>Take identity number and feature name, and return corresponding value.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -170,67 +247,22 @@ vector[‘Pork’, dislikes]</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="kNN.Recommender.import_feature_space">
-<code class="descname">import_feature_space</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Recommender.import_feature_space" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load CSV file containing feature space and set as instance space. Also sets features list.</p>
-<dl class="docutils">
-<dt>File must have the following format:</dt><br/>
-<dd><p class="first">ID Number,Name,Feature1,Feature2, …<br/>
-id0,name0,value01,value02, …<br/>
-id1,name1,value11,value12, …</p><br/>
-<blockquote class="last"><br/>
-<div>.   .       .       .     …</div></blockquote>
-</dd>
-</dl>
-<p>This is the format natively exported by Microsoft Excel 2013.</p>
+<dt id="kNN.Predictor.blank_features">
+<code class="descname">blank_features</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Predictor.blank_features" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of tuples listing all existing features without assigned value and corresponding idn.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list of tuples, each with format (idn, blank_feature_name).</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="method">
-<dt id="kNN.Recommender.predict_blank_features">
-<code class="descname">predict_blank_features</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Recommender.predict_blank_features" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a list of triplets for all blank features.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list of tuples containing (idn, feature, predicted_value).</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="kNN.Recommender.predict_feature">
-<code class="descname">predict_feature</code><span class="sig-paren">(</span><em>idn</em>, <em>feature</em><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Recommender.predict_feature" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return k-NN prediction of feature value for vector corresponding to given identity number.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>idn</strong> – identity number of vector containing feature to be predicted.</li>
-<li><strong>feature</strong> – name of feature to be predicted.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">predicted value for feature of vector.</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="kNN.Recommender.set_feature">
-<code class="descname">set_feature</code><span class="sig-paren">(</span><em>idn</em>, <em>feature</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Recommender.set_feature" title="Permalink to this definition">¶</a></dt>
+<dt id="kNN.Predictor.set_feature">
+<code class="descname">set_feature</code><span class="sig-paren">(</span><em>idn</em>, <em>feature</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Predictor.set_feature" title="Permalink to this definition">¶</a></dt>
 <dd><p>Take identity number, feature name, and value, and sets the feature value of the corresponding vector.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -251,16 +283,85 @@ id1,name1,value11,value12, …</p><br/>
 </dd></dl>
 
 <dl class="method">
-<dt id="kNN.Recommender.vector_string">
-<code class="descname">vector_string</code><span class="sig-paren">(</span><em>idn</em><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Recommender.vector_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Take identity number and return a string representation of corresponding vector.</p>
+<dt id="kNN.Predictor.predict_feature">
+<code class="descname">predict_feature</code><span class="sig-paren">(</span><em>idn</em>, <em>feature</em>, <em>k=None</em>, <em>calc_style=None</em><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Predictor.predict_feature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return k-NN prediction of feature value for vector corresponding to given identity number.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>idn</strong> – identity number of queried vector.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>idn</strong> – identity number of vector containing feature to be predicted.</li>
+<li><strong>feature</strong> – name of feature to be predicted.</li>
+<li><strong>k</strong> – Number of neighbours to consider in the kNN algorithm.</li>
+<li><strong>calc_style</strong> – The calculation style to use when making predictions.</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">string representation of vector, containing name, idn, features, and feature values.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">predicted value for feature of vector.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="kNN.Predictor.predict_blank_features">
+<code class="descname">predict_blank_features</code><span class="sig-paren">(</span><em>k=None</em>, <em>calc_style=None</em><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Predictor.predict_blank_features" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of triplets for all blank features.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>k</strong> – Number of neighbours to consider in the kNN algorithm.</li>
+<li><strong>calc_style</strong> – The calculation style to use when making predictions.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">List of tuples, each with format (idn, feature, predicted_value).</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="kNN.Predictor.export_predictions">
+<code class="descname">export_predictions</code><span class="sig-paren">(</span><em>predictions</em>, <em>prediction_filename=None</em><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Predictor.export_predictions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a list of predictions and save as CSV file using Excel 2013 formatting.</p>
+<p>List of predictions must have format [(idn1, feature1, value1), (idn2, feature2, value2), …].
+This is the format produced by the predict_blank_features method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>predictions</strong> – List of prediction tuples.</li>
+<li><strong>prediction_filename</strong> – Name of .csv file where predictions will be saved.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="kNN.Predictor.predictions_string">
+<code class="descname">predictions_string</code><span class="sig-paren">(</span><em>predictions</em><span class="sig-paren">)</span><a class="headerlink" href="#kNN.Predictor.predictions_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a list of predictions and return a CSV string containing the data.</p>
+<p>List of predictions must have format [(idn1, feature1, value1), (idn2, feature2, value2), …].
+This is the format produced by the predict_blank_features method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>predictions</strong> – List of prediction tuples.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
 </tbody>
 </table>
@@ -288,7 +389,7 @@ id1,name1,value11,value12, …</p><br/>
 <h3>Navigation</h3>
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">kNNdoc</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">k-NN Predictor</a></li>
 </ul>
 
 <div class="relations">

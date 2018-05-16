@@ -1,0 +1,5 @@
+k-NN Predictor
+**************
+
+.. automodule:: kNN
+   :members:
